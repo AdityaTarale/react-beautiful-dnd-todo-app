@@ -6,7 +6,22 @@ import Column from "./components/Column";
 function App() {
   const [state, setState] = useState(initialData);
 
+  const handleOnDragStart = () => {
+    document.body.style.color = "orange";
+    document.body.style.transition = "background-color 0.2s ease";
+  };
+  const handleOnDragUpdate = (update) => {
+    const { destination } = update;
+    const opacity = destination
+      ? destination.index / Object.keys(state.tasks).length
+      : 0;
+    document.body.style.backgroundColor = `rgba(153,141,217,${opacity})`;
+  };
+
   const handleOnDragEnd = (result) => {
+    document.body.style.color = "inherit";
+    document.body.style.backgroundColor = "inherit";
+
     const { destination, source, draggableId } = result;
     if (!destination) return;
     if (
@@ -37,7 +52,11 @@ function App() {
   };
 
   return (
-    <DragDropContext onDragEnd={handleOnDragEnd}>
+    <DragDropContext
+      onDragStart={handleOnDragStart}
+      onDragUpdate={handleOnDragUpdate}
+      onDragEnd={handleOnDragEnd}
+    >
       {state.columnOrder.map((columnId) => {
         const column = state.columns[columnId];
         const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
