@@ -28,7 +28,11 @@ const Column = (props) => {
   return (
     <Container>
       <Title>{props.column.title}</Title>
-      <Droppable droppableId={props.column.id}>
+      <Droppable
+        droppableId={props.column.id}
+        // type={props.column.id === "column-3" ? "done" : "active"}
+        isDropDisabled={props.isDropDisabled}
+      >
         {(provided, snapshot) => (
           <TaskList
             ref={provided.innerRef}
@@ -41,7 +45,7 @@ const Column = (props) => {
             {provided.placeholder}
           </TaskList>
         )}
-      </Droppable>
+      </Droppable> 
     </Container>
   );
 };

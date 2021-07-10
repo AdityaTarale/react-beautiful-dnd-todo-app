@@ -10,8 +10,15 @@ const Container = styled.div`
 
 function App() {
   const [state, setState] = useState(initialData);
+  const [homeIndex, setHomeIndex] = useState(null);
+
+  const handleOnDragStart = (start) => {
+    const columnIndex = state.columnOrder.indexOf(start.source.droppableId);
+    setHomeIndex(columnIndex);
+  };
 
   const handleOnDragEnd = (result) => {
+    setHomeIndex(null);
     const { destination, source, draggableId } = result;
     if (!destination) return;
     if (
@@ -73,13 +80,25 @@ function App() {
   };
 
   return (
-    <DragDropContext onDragEnd={handleOnDragEnd}>
+    <DragDropContext
+      onDragStart={handleOnDragStart}
+      onDragEnd={handleOnDragEnd}
+    >
       <Container>
-        {state.columnOrder.map((columnId) => {
+        {state.columnOrder.map((columnId, index) => {
           const column = state.columns[columnId];
           const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
 
-          return <Column key={column.id} column={column} tasks={tasks} />;
+          const isDropDisabled = index < homeIndex;
+
+          return (
+            <Column
+              key={column.id}
+              column={column}
+              tasks={tasks}
+              isDropDisabled={isDropDisabled}
+            />
+          );
         })}
       </Container>
     </DragDropContext>
