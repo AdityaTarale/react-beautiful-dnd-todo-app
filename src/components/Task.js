@@ -3,35 +3,35 @@ import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 
 const Container = styled.div`
-  border: 1px solid lightgrey;
-  border-radius: 2px;
+  border: 3px solid lightgrey;
+  border-radius: 50%;
   padding: 8px;
-  margin-bottom: 8px;
-  background-color: ${(props) =>
-    props.isDragDisabled
-      ? "lightgrey"
-      : props.isDragging
-      ? "lightgreen"
-      : "white"};
+  margin-right: 8px;
+  background-color: ${(props) => (props.isDragging ? "lightgreen" : "white")};
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:focus {
+    outline: none;
+    border-color: red;
+  }
 `;
 
 const Task = (props) => {
-  const isDragDisabled = props.task.id === "task-1";
   return (
-    <Draggable
-      draggableId={props.task.id}
-      index={props.index}
-      isDragDisabled={isDragDisabled}
-    >
+    <Draggable draggableId={props.task.id} index={props.index}>
       {(provided, snapshot) => (
         <Container
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           isDragging={snapshot.isDragging}
-          isDragDisabled={isDragDisabled}
         >
-          {props.task.content}
+          {props.task.content[0]}
         </Container>
       )}
     </Draggable>
